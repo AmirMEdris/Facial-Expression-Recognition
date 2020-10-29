@@ -2,7 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+FaceDetect-master/
+tf-pose-estimation/
+TF2_Pose_Estimation/
+*.csv
+*.zip
 # C extensions
 *.so
 
