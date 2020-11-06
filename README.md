@@ -15,17 +15,22 @@ the original dataset used for the emotion detection model can be found on Kaggle
 Imagine you are pitching a business idea on the very popular show shark tank. Lets say your idea is something in the medical field. Now alot of people that watch shark tank will know that mark cuban tends to be skeptical of pitches in the medical field particularly if the persons ideas cannot be backed by their own research. So if you are doing your medical pitch on shark tank and the model gives you the information that mark has shown disgust anger and sadness while you were speaking you can now readjust who you are pitching too since its clear that you wont be getting an offer from him any more you can cater to the remaining sharks. While this might be a specific example I think this conveys the oppourtunity that a model like this creates for people who have to convey ideas.
 
 ## Repo Structure and Project Approach
- 
+  When I started this project I was mainly interested in seeing how much progress I could make so before training models I wanted to see If I could get to the point of sucessfully predicting pose and emotion on multiple people in realtime. With this goal in mind I decided to temporarily use the weights from someone elses model for the image dataset and see how far into my goal I can get. Initially I used open cv to capture my cameras live feed in a while loop. then every frame I would lower the resolution into the one that the model accepts of 48 by 48 and grayscale it which was terrible because this methood took a 1080p frame and downscaled the entire thing meaning that the entire 1080p picture would one look horrible and two the entire picture which might not even have a face at all will be treated as if its one picture of one face. The first fix that I attempted was to only downscale a subset of the 1080p picture. This helped my problem because now I was downscaling a 300 by 300 square to 48 by 48 instead of an hd rectangle. the features of the face were easier to see but the problem of the entire picture being treated like a face regardless of how many faces are actually present remained. I started to think about how to go about making a model that detects faces present in a picture. This led me to read about different methoods on how to do this then finally I stumbled upon a model which is even included in open cv called a Haar Cascade Classifier which was first used around 2001 and is essentially a model that knows the group of features present in a face and can tell you where in a picture a face is located even if there are multiple. So this fixed my problem and making a function that used opencvs version of this model for facial detection and returned the face images and the faces coords is where this project started to come together. next I used the tf pose module for the mobile net module which is a cnn that can predict the locations of different body parts which is a much more complicated model than the harrcascade because this model consists of multiple different cnns and has to make a ton of different predictions instead of is this group of pixels a face.
  ### Master_notebook.ipynb
-  - incomplete
+  - The model that I used for for face detection is a HaarCascadeClassifier from opencv
+  - The weights for the cnn that makes emotion prediction Is from kaggle user Ashadullah Shawon
+  - Pose estimation came from the mobilenet v2 model which I am using from the tf-pose module which is a subset of the famous cmu pose estimation model
  ### Model interp.ipynb
-  - incomplete
+  - the visualizations that I make use feature extraction from the cnn model used in the main notebook by outputting the result of each conv layer prior to the dense ones
+  - the next set of visualizations that I plan to do are to use the google deep dream gradient ascent methood that to maximize loss in a picture for each layer of the cnn to get a nice representation of what the model is looking for by generating the picture that would excite the model the most.
+ ### Functions.py
+ - initially both of the previous notebooks were a complete mess so I made a new file named functions where I essentially dumped every function definition and every module import and in there included functions like "my_model" which just loads the arcitecture of the model that I used from Ashadullah Shawon.
 ## Modeling 
-
+-incomplete
 ## Final Modeling and Analysis 
-
+-incomplete
 ## Visualizing Classifications 
-
+Now that the underlying framework is put into place and fully functional 
 
 
 ## Conclusions/Next Steps 
