@@ -14,7 +14,7 @@ Social-Emotional Agnosia is the inability to perceive nonverbal cues. Experts sa
 With the imergence of Augmented reality devices like hololens and the ever increasing computation capabilities of mobile devices more and more machine learning projects are being made to deduce information from your surroundings.  
 the original dataset used for the emotion detection model can be found on Kaggle at the following link: https://www.kaggle.com/deadskull7/fer2013
 ### class imbalance
-![Image]https://github.com/AmirMEdris/Emotion-classification-from-facial-expression/blob/main/Pics/Screen%20Shot%202020-11-12%20at%203.08.24%20PM.png
+![Image](https://github.com/AmirMEdris/Emotion-classification-from-facial-expression/blob/main/Pics/Screen%20Shot%202020-11-12%20at%203.08.24%20PM.png)
 ## Repo Structure and Project Approach
 
  ### Master_notebook.ipynb
