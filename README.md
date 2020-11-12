@@ -34,6 +34,8 @@ The pics above are two pics that I chose one from the dataset, and one of me tho
 
 ![Image](https://github.com/AmirMEdris/Emotion-classification-from-facial-expression/blob/main/Pics/download.png)
 ![Image](https://github.com/AmirMEdris/Emotion-classification-from-facial-expression/blob/main/Pics/image.png)
+
+
 the first group of images in orange are of the same person on the left before, and its the output of one layer of conv filters. this is why I dont really like using activations as much because it literally generates 500-1000 photos as opposed to one with all the features included. Any way the green group of pictures are heatmaps over what the filters thought were inportant in their classification and if you look the eyes tend to draw much attention to the model even though they are fairly normal. While the filters do acknolege the smile it seems to be overshawdowed by the eye. Multiple different cases like this are what led me to think that this model wasnt deep enough and was maybe picking up on something suttle but important like microexpressions around the eyes but just poorly.
 
 With a 60% accuracy on the val set the model improved by a 4% margin even though it is probably triple the size inrestingly though it did amazing on the minority class disgust 
