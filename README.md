@@ -32,8 +32,7 @@ the original dataset used for the emotion detection model can be found on Kaggle
  ### Master_notebook.ipynb
   - Import all necessary libraries and modules to use and manipulate image data as well as build  models
   - For ease of use, multiple functions are declared at the top of the notebook
-  - Look at Regular and Infected Cells to look for visual differences
-  - Look at dataset's class distribtuions and use to build a dummy classifier model
+  - Look at dataset's class distribtuions
   - Prepare both complicated and simple CNN models to see how well they perform classfications, try different hyperparamters to optimize performance.
   - Compare Models' performances on evaluation metrics and select the best performing model
   - Select Final model and test for overfitting, correct for overfitting accordingly
@@ -42,15 +41,6 @@ the original dataset used for the emotion detection model can be found on Kaggle
  ### Model interp.ipynb
  - contains code aand functions to visualize what the model is seeing at different layers of the netework
  
-## Modeling 
-For Modeling, We believed that testing four types of models and consistently altering hyper parameters would best allow us to find the ideal model. We first created a dummy model that would predict the dominant class. However, as you can see above, there was no numerically dominant class. Thus, We chose the infected class as the dominant to minimize false negatives. This model achieved an accuracy of exactly 50%. We also decided to create a simpler CNN model with less convultional and dense layers. This model achieved an accuracy of 93% on the validation set. We then decided to create a more complex CNN model to see how well it would perform. The complex CNN model achieved an accuracy of about 95% on the validation set. We then decided to use Transfer Learning to determine whether that could further improve performance. We used Google's prebuilt Model InceptionV3 which is trained on large amounts of medical data.  We acheived an accuracy of 92% on the validation set for that model.
-
-## Final Modeling and Analysis 
-Due to it outperforming all other models, We selected the Complex CNN model as our final model. Achieving 95% Accuracy on both our test sets and validation sets was certainly impressive. Also, this model achieved a recall of .96 on the infected class, We were very satisified with this result because it proved that we are effectively limiting our false negatives as well.
-
-
-
-As can be seen above, this model accuractly classifies whether or not a cell is infected and it also minimizes incorrect classifications. Thus, we can feel confident this model can be highly effective as a diagnosis tool.
 
 ## Visualizing Classifications 
 neural networks and cnns in particular are known for being "black box" models due to the fact that they get results but arent very transparent about it. I used two methods to try and infer what the model thought was important. CNNs contain dense layers much like their more basic counterparts, however, the convolutional layers that they use can each be output as its own individual picture showing the transformation that the model has that layer doing, doing this is called getting layer activations and all you really need to do is make a new model which is identical to the cnn you wish to visualize except it outputs before reaching the dense layers giving you the breakdown in a sense for the picture you would feed that model. The other methood that I used, deep dream image generation, is a methood by google where you feed an image into the model and calculate a loss function to represent how active the model is when looking at that image and instead of decreasing the loss we do the oppisite and so instead of the model telling you what the picture is you get something closer to what the model sees when it sees the input. I couldnt generate these images for everymodel because I had only ever done this on much smaller scale models and didnt realise they take a while to produce also my final model broke the deep dream visualization
@@ -60,5 +50,6 @@ The pics above are two pics that I chose one from the dataset, and one of me tho
 
 ![Image](https://github.com/AmirMEdris/Emotion-classification-from-facial-expression/blob/main/Pics/download.png)
 ![Image](https://github.com/AmirMEdris/Emotion-classification-from-facial-expression/blob/main/Pics/image.png)
+the first group of images in orange are of the same person on the left before, and its the output of one layer of conv filters. this is why I dont really like using activations as much because it literally generates 500-1000 photos as opposed to one with all the features included. Any way the green group of pictures are heatmaps over what the filters thought were inportant in their classification and if you look the eyes tend to draw much attention to the model even though they are fairly normal. While the filters do acknolege the smile it seems to be overshawdowed by the eye. Multiple different cases like this are what led me to think that this model wasnt deep enough and was maybe picking up on something suttle but important like microexpressions around the eyes but just poorly
 ## Conclusions/Next Steps 
 There are so many direction to go in from this point. I think that the Haar Cascade Classifier can be improved because most of the time it struggles to find faces that are tilted more than 30 degrees also it frequently thinks that stripes are faces. I think you can also change the classes  to positive and negative than make a new set of data in conjunction with the pose estimator and make a model that classifies positve vs negative pose for a person and then be able to more acuratly predict emotion using this new info. Im also tempted to say a dataset of higher resolution pictures may provide more accurate results especially due to the fact that I had to downscale most of the images to try to replicate the 48,48 res but most of the time there seemed to be a difference, however for realtime image classification I think that would probably half the already low fps. Finally I think that a depth map would also be a good thing to add to be able to know if distance for each predicted body part. 
