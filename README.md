@@ -11,9 +11,7 @@ By Amir Edris
 ## Business Case 
 Social-Emotional Agnosia is the inability to perceive nonverbal cues. Experts say that 70-93% of communication is non-verbal meaning that the vast majority of information being conveyed in a conversation resides in visual cues such as body language or facial expression. As a result, people who suffer from Social-Emotional Agnosia often have to learn to identify these social cues on their own which you can imagine isn’t as easy as it sounds. Using object detection and image classification techniques I believe we can provide a real-time classification of at least some of these nonverbal cues and provide aid to those who struggle with these skills. 
 ## Project Overview
-With the imergence of Augmented reality devices like hololens and the ever increasing computation capabilities of mobile devices means that it is becoming more and more possible to use machine learning to to can start to play  , the possibily of  Thus, Parasite counts are used to diagnose malaria correctly. However, the manual counting of parasites varies depending on the skill and expertise of the microscopist. Depending on the conditions and treament of these scientisits, accurate diagnosis can vary. Thus, the goal of this project is to create a highly accurate image classification model that can quickly and effictively diagnose Malaria.The model will be trained on a kaggle dataset of approximatly 28,000 photos of infected and uninfected cells. The original dataset cvan be found on Kaggle at the following link: https://www.kaggle.com/iarunava/cell-images-for-detecting-malaria
-
-
+With the imergence of Augmented reality devices like hololens and the ever increasing computation capabilities of mobile devices more and more machine learning projects are being made to deduce information from your surroundings.  
 the original dataset used for the emotion detection model can be found on Kaggle at the following link: https://www.kaggle.com/deadskull7/fer2013
 
 ## Repo Structure and Project Approach
