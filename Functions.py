@@ -25,7 +25,78 @@ import seaborn as sn
 from skimage import io
 import cv2 #opencv-python
 from time import time
+from IPython import display
+from IPython.display import clear_output
+import PIL
+import tensorflow as tf
+import scipy
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Conv2D,MaxPool2D,Dropout,Flatten,Dense,BatchNormalization
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.callbacks import EarlyStopping
+from keras.models import Sequential
+import glob
+from keras import models
+#from ann_visualizer.visualize import ann_viz;
+import pickle as pkl
+import numpy as np
+import pandas as pd #more libraries and modules
+import matplotlib.pyplot as plt
+import six
+np.random.seed(123)
+# from tf_cnnvis import deepdream_visualization
+import splitfolders
+import seaborn as sns
+from keract import get_activations, display_activations,display_heatmaps,get_gradients_of_activations
+from tensorflow.keras.applications.inception_v3 import InceptionV3
+from sklearn import metrics
+import itertools
+import numpy as np
+import pandas as pd #more libraries and modules
+import matplotlib.pyplot as plt
+import six
+from sklearn import metrics
+import numpy as np
+import pyautogui 
+import matplotlib.pyplot as plt
+import itertools
+import matplotlib as mpl
 
+
+import PIL.Image
+
+from tensorflow.keras.preprocessing import image
+def plot_confusion_matrix(cm, class_names):
+    """
+    Returns a matplotlib figure containing the plotted confusion matrix.
+    
+    Args:
+       cm (array, shape = [n, n]): a confusion matrix of integer classes
+       class_names (array, shape = [n]): String names of the integer classes
+    """
+    cm = np.array(cm)
+    figure = plt.figure(figsize=(8, 8))
+    plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+    plt.title("Confusion matrix")
+    plt.colorbar()
+    tick_marks = np.arange(len(class_names))
+    plt.xticks(tick_marks, class_names, rotation=45)
+    plt.yticks(tick_marks, class_names)
+    
+    # Normalize the confusion matrix.
+    cm = np.around(cm.astype('float') / cm.sum(axis=1)[:, np.newaxis], decimals=2)
+    
+    # Use white text if squares are dark; otherwise black.
+    threshold = cm.max() / 2.
+    
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        color = "white" if cm[i, j] > threshold else "black"
+        plt.text(j, i, cm[i, j], horizontalalignment="center", color=color)
+        
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    return 
 
 def getData(filname):
     # images are 48x48
@@ -136,7 +207,123 @@ def maketextaboveface(frame,text, coords):
     font = cv2.FONT_HERSHEY_SIMPLEX
 #     cv2.imshow('mod input', frame[0])    
     cv2.putText(frame, text, (coords[0]+10, coords[1]), font, 1, (100,255,0), 1, cv2.LINE_AA)
+def deprocess(img):
+    img = 255*(img + 1.0)/2.0
+    return tf.cast(img, tf.float32)
+
+# Display an image
+def show(img):
+    display.display(PIL.Image.fromarray(np.array(tf.cast(img, tf.uint8))))
+# # Create the feature extraction model
     
+def calc_loss(img, model):
+  # Pass forward the image through the model to retrieve the activations.
+  # Converts the image into a batch of size 1.
+    img_batch = tf.expand_dims(img, axis=0)
+    layer_activations = model(img_batch)
+    if len(layer_activations) == 1:
+        layer_activations = [layer_activations]
+
+    losses = []
+    for act in layer_activations:
+        loss = tf.math.reduce_mean(act)
+        losses.append(loss)
+
+    return  tf.reduce_sum(losses)
+class DeepDream(tf.Module):
+    def __init__(self, model):
+        self.model = model
+
+#     @tf.function(
+#         input_signature=(
+#         tf.TensorSpec(shape=[None,None,1], dtype=tf.float32),
+#         tf.TensorSpec(shape=[], dtype=tf.int32),
+#         tf.TensorSpec(shape=[], dtype=tf.float32),))
+    def __call__(self, img, steps, step_size):
+        print("Tracing")
+        loss = tf.constant(0.0)
+        for n in tf.range(steps):
+            with tf.GradientTape() as tape:
+                # This needs gradients relative to `img`
+          # `GradientTape` only watches `tf.Variable`s by default
+                tape.watch(img)
+                loss = calc_loss(img, self.model)
+
+        # Calculate the gradient of the loss with respect to the pixels of the input image.
+                gradients = tape.gradient(loss, img)
+
+        # Normalize the gradients.
+                gradients = gradients*tf.math.reduce_std(gradients) + 1e-8 
+        
+        # In gradient ascent, the "loss" is maximized so that the input image increasingly "excites" the layers.
+        # You can update the image by directly adding the gradients (because they're the same shape!)
+                img = img + gradients*step_size
+                show(img)
+                print("Step {}, loss {}".format(step_size, loss))
+                display.clear_output(wait=True)
+#                 img = tf.clip_by_value(img, -1, 1)
+
+        return loss, img
+def run_deep_dream_simple(deepdream,img, steps=100, step_size=0.01):
+      # Convert from uint8 to the range expected by the model.
+    img = tf.convert_to_tensor(img)
+    step_size = tf.convert_to_tensor(step_size)
+    steps_remaining = steps
+    step = 0
+    while steps_remaining:
+        if steps_remaining>100:
+            run_steps = tf.constant(100)
+        else:
+            run_steps = tf.constant(steps_remaining)
+        steps_remaining -= run_steps
+        step += run_steps
+    
+        loss, img = deepdream(img, run_steps, tf.constant(step_size))
+    
+        display.clear_output(wait=True)
+        show(img)
+        print ("Step {}, loss {}".format(step, loss))
+
+
+        result = img
+        display.clear_output(wait=True)
+        show(result)
+
+    return result
+def generatedeepdreamimg(imagebatch,model,imageposinbatch):
+    base_model = model
+
+    names = [name.name for name in  base_model.layers]
+    layers = [base_model.get_layer(name).output for name in names[:]]
+
+# Create the feature extraction model
+    dream_model = tf.keras.Model(inputs=base_model.input, outputs=layers)
+
+    original_img = np.array(imagebatch)
+    original_img = original_img[imageposinbatch]
+    original_img = ((original_img)).astype(np.float32)
+    dream_model = tf.keras.Model(inputs=base_model.input, outputs=layers)
+
+# show(deprocess(original_img))
+    deepdream = DeepDream(dream_model)
+    dream_img = run_deep_dream_simple(img=original_img, 
+                                  steps=1000, step_size=0.5)
+    return dream_img   
+def modelaccuracy(model,X,y_test,label_map):
+    y_pred=model.predict(X)
+    y_test.shape
+
+    ly_pred = []
+    for i in y_pred:
+        ly_pred.append(i.argmax())
+    ly_test = []
+    for i in y_test:
+        ly_test.append(i.argmax())
+
+    cm = tf.math.confusion_matrix(ly_pred,ly_test)
+
+    cm=plot_confusion_matrix(cm,label_map)
+    return cm
 def main():
     
     pass
