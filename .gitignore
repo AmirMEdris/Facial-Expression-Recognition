@@ -9,7 +9,6 @@ TF2_Pose_Estimation/
 *.zip
 # C extensions
 *.so
-FinalModel.data-00000-of-00001
 # Distribution / packaging
 .Python
 build/
