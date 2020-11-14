@@ -115,35 +115,62 @@ def getData(filname):
     X, Y = np.array(X) / 255.0, np.array(Y)
     return X, Y
 def my_model():
-    model = Sequential()
+    final_model = Sequential()
     input_shape = (48,48,1)
-    model.add(Conv2D(64, (5, 5), input_shape=input_shape,activation='relu', padding='same'))
-    model.add(Conv2D(64, (5, 5), activation='relu', padding='same'))
-    model.add(BatchNormalization())
-    model.add(MaxPooling2D(pool_size=(2, 2)))
+    final_model.add(Conv2D(128, (5, 5), input_shape=input_shape,activation='relu', padding='same'))
+    final_model.add(Conv2D(128, (5, 5), input_shape=input_shape,activation='relu', padding='same'))
+    final_model.add(Conv2D(128, (5, 5), input_shape=input_shape,activation='relu', padding='same'))
 
-    model.add(Conv2D(128, (5, 5),activation='relu',padding='same'))
-    model.add(Conv2D(128, (5, 5),activation='relu',padding='same'))
-    model.add(BatchNormalization())
-    model.add(MaxPooling2D(pool_size=(2, 2)))
+    final_model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    model.add(Conv2D(256, (3, 3),activation='relu',padding='same'))
-    model.add(Conv2D(256, (3, 3),activation='relu',padding='same'))
-    model.add(BatchNormalization())
-    model.add(MaxPooling2D(pool_size=(2, 2)))
+    final_model.add(Conv2D(256, (5, 5),activation='relu',padding='same'))
+    final_model.add(Conv2D(256, (3, 3),activation='relu',padding='same'))
 
-    model.add(Flatten())
-    model.add(Dense(128))
-    model.add(BatchNormalization())
-    model.add(Activation('relu'))
-    model.add(Dropout(0.2))
-    model.add(Dense(7))
-    model.add(Activation('softmax'))
+    final_model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    model.compile(loss='categorical_crossentropy', metrics=['accuracy'],optimizer='adam')
+    final_model.add(Conv2D(1024, (3, 3),activation='relu',padding='same'))
+    final_model.add(BatchNormalization())
+    final_model.add(MaxPooling2D(pool_size=(2, 2)))
+
+    final_model.add(Flatten())
+    final_model.add(BatchNormalization())
+
+
+    final_model.add(Dense(999))
+    final_model.add(Activation('relu'))
+    final_model.add(Dropout(0.3))
+    final_model.add(BatchNormalization())
+
+    final_model.add(Dense(750))
+    final_model.add(Activation('relu'))
+    final_model.add(Dropout(0.3))
+
+    final_model.add(BatchNormalization())
+
+
+    final_model.add(Dense(500))
+    final_model.add(Activation('relu'))
+    final_model.add(Dropout(0.2))
+
+    final_model.add(BatchNormalization())
+
+    final_model.add(Dense(100))
+    final_model.add(Activation('relu'))
+    final_model.add(Dropout(0.2))
+
+    final_model.add(BatchNormalization())
+
+    final_model.add(Dense(25))
+    final_model.add(Activation('relu'))
+    final_model.add(Dropout(0.1))
+
+    final_model.add(Dense(7))
+    final_model.add(Activation('softmax'))
+
+    final_model.compile(loss='categorical_crossentropy', metrics=['accuracy'],optimizer='adam')
     
     
-    return model
+    return final_model
 def emotion_analysis(emotions):
     objects = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral']
     y_pos = np.arange(len(objects))
