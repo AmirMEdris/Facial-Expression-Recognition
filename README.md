@@ -15,10 +15,10 @@ Social-Emotional Agnosia is the inability to perceive nonverbal cues. Experts sa
 
 # Project Overview
 the original dataset used for the emotion detection model can be found on Kaggle at the following link: https://www.kaggle.com/deadskull7/fer2013
-### Data Cleaning and class imbalance
+## Data Cleaning and class imbalance
 The data came in a csv where the image pixels were a string in the first column. Data cleaning consisted of parsing this dataframe and reformatting the pixels into the original 48x48 grayscale pictures and making train and validation tensors.
 ![Image](https://github.com/AmirMEdris/Facial-Expression-Recognition/blob/main/Pics/add_picture_matplotlib_figure.png)
-### Modeling process
+## Modeling process
 During the modelling process a wide range of models were created and analyzed on how each was coming to its conclusions. Through activation layer visualizations, the sequence of conv layers that led to the best feature extraction was identified and dropout layers were added to combat overfitting. 
 ## Real-time application
 ![Image](https://github.com/AmirMEdris/Facial-Expression-Recognition/blob/main/Pics/heat2.gif)
