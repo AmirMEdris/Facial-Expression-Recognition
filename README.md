@@ -39,8 +39,7 @@ The pics above are two pics that I chose one from the dataset, and one of me tho
 ![Image](https://github.com/AmirMEdris/Facial-Expression-Recognition/blob/main/Pics/Screen%20Shot%202020-11-20%20at%2012.08.28%20PM.png)
 
 
-the first group of images in orange is the avg conv layer output for 7 cases of the different classes. this is why I don’t really like using activations as much because it literally generates 500-1000 photos as opposed to one with all the features included. Anyway the green group of pictures is heatmaps over what the filters thought were important in their classification and if you look the eyes tend to draw much attention to the model even though they are fairly normal. While the filters do acknowledge the smile it seems to be overshawdowed by the eye. Multiple different cases like this are what led me to think that this model wasn’t deep enough and was maybe picking up on something subtle but important like microexpressions around the eyes but just poorly.
-
+This group of images shows the sum features extracted by each conv layer for 7 cases of the different classes. The normal way to view activations is filter by filter but instead of just that I added the filters together and got the features extract for the layer. Using the picture was very helpful in understanding what the models take away from each img was so I made a model evaluation function that would generate this among a confusion matrix for me to be able to look layer by layer and see how my changes to the model affected its learning. One way this helped me was in being able to add the right filter layer for mouths in the final model. Most of the models were struggling in iding lips but the 2 that didnt had bigger conv filters which helped me see that one wide conv filter was necessary. 
 ![Image](https://github.com/AmirMEdris/Facial-Expression-Recognition/blob/main/Pics/Screen%20Shot%202020-11-12%20at%202.59.05%20PM.png)
 
 ## Conclusions/Next Steps
