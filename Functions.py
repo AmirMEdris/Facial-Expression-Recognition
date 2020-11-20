@@ -191,8 +191,8 @@ def find_faces_in_img(frame,faceCascade):
         scaleFactor=1.1,
         minNeighbors=5,
         minSize=(48, 48),
-        maxSize = (300,300)
-        #flags = cv2.CV_HAAR_SCALE_IMAGE
+        maxSize = (300,300),
+        flags = cv2.CASCADE_SCALE_IMAGE
     )
 
 #     print("Found {0} faces!".format(len(faces)))
