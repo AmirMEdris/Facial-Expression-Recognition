@@ -13,8 +13,18 @@ Social-Emotional Agnosia is the inability to perceive nonverbal cues. Experts sa
 
 
 ## Project Overview
-With the emergence of Augmented reality devices like hololens and the ever-increasing computation capabilities of mobile devices more and more machine learning projects are being made to deduce information from your surroundings.
 the original dataset used for the emotion detection model can be found on Kaggle at the following link: https://www.kaggle.com/deadskull7/fer2013
+### Data Cleaning and class imbalance
+The data came in a csv where the image pixels were a string in the first column. Data cleaning consisted of parsing this dataframe and reformatting the pixels into the original 48x48 grayscale pictures and making train and validation tensors.
+![Image](https://github.com/AmirMEdris/Facial-Expression-Recognition/blob/main/Pics/add_picture_matplotlib_figure.png)
+### Modeling process
+During the modelling process a wide range of models were created and analyzed on how each was coming to its conclusions. Through activation layer visualizations, the sequence of conv layers that led to the best feature extraction was identified and dropout layers were added to combat overfitting. 
+## Real-time application
+### Facial Recognition
+Using a Haar Cascade classifier and opencv, the coordinates of probable faces were obtained. These coordinates were then used to crop faces. The cropped faces were then downscaled to end up with a picture closer to what the training data was. This makes the model more accurate and allows for the prediction of multiple people at a time. 
+### Pose Estimation
+While facial expression is a major part of non-verbal communication, body language can be used in conjunction with an accurate classifier to add contextual information and therefore, further increase overall modeling accuracy.
+
 
 ## Repo Structure and Project Approach
  ### Facial Expression Recognition.pdf
@@ -28,7 +38,7 @@ the original dataset used for the emotion detection model can be found on Kaggle
  pretty much a library of all the fucntions and imports I used to make things much less messy which just loads the architecture of the model that I used from Ashadullah Shawon.
 
  
-![Image](https://github.com/AmirMEdris/Facial-Expression-Recognition/blob/main/Pics/add_picture_matplotlib_figure.png)
+
 ## Visualizing Classifications and modeling
 neural networks and cnns in particular are known for being "black box" models due to the fact that they get results but arent very transparent about it. I used two methods to try and infer what the model thought was important. CNN’s contain dense layers much like their more basic counterparts, however, the convolutional layers that they use can each be output as its own individual picture showing the transformation that the model has that layer doing, doing this is called getting layer activations and all you really need to do is make a new model which is identical to the CNN you wish to visualize except it outputs before reaching the dense layers giving you the breakdown in a sense for the picture you would feed that model. The other method that I used, deep dream image generation, is a method by google where you feed an image into the model and calculate a loss function to represent how active the model is when looking at that image, and instead of decreasing the loss we do the opposite and so instead of the model tells you what the picture is you get something closer to what the model sees when it sees the input. I couldn’t generate these images for every model because I had only ever done this on much smaller scale models and didn’t realize they take a while to produce also my final model broke the deep dream visualization
 
