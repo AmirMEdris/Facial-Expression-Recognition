@@ -17,15 +17,15 @@ With the emergence of Augmented reality devices like hololens and the ever-incre
 the original dataset used for the emotion detection model can be found on Kaggle at the following link: https://www.kaggle.com/deadskull7/fer2013
 
 ## Repo Structure and Project Approach
+ ### Facial Expression Recognition.pdf
+ My presentation slides in pdf format
 
  ### Master_notebook.ipynb
- The Main notebook takes you through the all the steps I took to implement the the three different models that I used
- ### Model Visualizations.ipynb
-  - the visualizations that I make use of feature extraction from the CNN model used in the main notebook by outputting the result of each conv layer prior to the dense ones
-  - the next set of visualizations that I plan to do are to use the google deep dream gradient ascent method that to maximize loss in a picture for each layer of the CNN to get a nice representation of what the model is looking for by generating the picture that would excite the model the most.
-
+ The Main notebook takes you through the all the steps I took to implement the the three different models that I used and using opencv to do realtime object detection using my models
+ ### Modeling.ipynb
+ This is the notebook I trained my models in on google cloud it has visuals for every model and some of my thoughts
  ### Functions.py
- - initially, both of the previous notebooks were a complete mess so I made a new file named functions where I essentially dumped every function definition and every module import and in there included functions like "my_model" which just loads the architecture of the model that I used from Ashadullah Shawon.
+ pretty much a library of all the fucntions and imports I used to make things much less messy which just loads the architecture of the model that I used from Ashadullah Shawon.
 
  
 
