@@ -22,7 +22,7 @@ The data came in a csv where the image pixels were a string in the first column.
 During the modelling process a wide range of models were created and analyzed on how each was coming to its conclusions. Through activation layer visualizations, the sequence of conv layers that led to the best feature extraction was identified and dropout layers were added to combat overfitting. 
 ## Real-time application
 ![Image](https://github.com/AmirMEdris/Facial-Expression-Recognition/blob/main/Pics/heat2.gif)
-- using my model to predict realtime off of my screen
+- using my model, opencv, and cmu's mobilenet-v2 to predict realtime off of my screen
 ### Facial Recognition
 Using a Haar Cascade classifier and opencv, the coordinates of probable faces were obtained. These coordinates were then used to crop faces. The cropped faces were then downscaled to end up with a picture closer to what the training data was. This makes the model more accurate and allows for the prediction of multiple people at a time. 
 ### Pose Estimation
