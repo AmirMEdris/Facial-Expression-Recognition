@@ -45,7 +45,6 @@ import matplotlib.pyplot as plt
 import six
 np.random.seed(123)
 # from tf_cnnvis import deepdream_visualization
-import splitfolders
 import seaborn as sns
 from keract import get_activations, display_activations,display_heatmaps,get_gradients_of_activations
 from tensorflow.keras.applications.inception_v3 import InceptionV3
@@ -57,7 +56,6 @@ import matplotlib.pyplot as plt
 import six
 from sklearn import metrics
 import numpy as np
-import pyautogui 
 import matplotlib.pyplot as plt
 import itertools
 import matplotlib as mpl
@@ -66,6 +64,49 @@ import matplotlib as mpl
 import PIL.Image
 
 from tensorflow.keras.preprocessing import image
+def show_activations(base_model,pics,y=None):
+
+  names = [name.name for name in  base_model.layers if 'conv2d' in name.name or 'max' in name.name]
+  print(names)
+  layers = [base_model.get_layer(name).output for name in names[:-1]]
+  # Create the feature extraction model
+  dream_model = tf.keras.Model(inputs=base_model.input, outputs=layers)
+  count = 0
+  fig, ax = plt.subplots(len(pics),len(layers)+1,figsize=(16,9))
+  picnum=0
+  for current_pic in pics:
+      ax[picnum,0].matshow(current_pic[:,:])
+      current_pic=current_pic.reshape(1,48,48,1)
+      current_pic_layers = dream_model.predict(current_pic)
+      layernum = 1
+      for layer in current_pic_layers:
+        picture = []
+        for i in range(len(layer[:])):
+          layer1 = layer[i]
+          column = []
+          for ii in range(len(layer1[:])):
+            layer2=layer1[ii]
+            row = []
+            for iii in range(len(layer2[:])):
+              layer3 = layer2[iii]
+              row.append([sum(layer3)/len(layer3)])
+            column.append(row)
+          picture.append(column)
+      
+          ax[picnum,layernum].matshow(np.array(picture)[0,:,:,0],cmap='gray')
+          ax[picnum,layernum].grid(False)
+
+        # Hide axes ticks
+          ax[picnum,layernum].set_xticks([])
+          ax[picnum,layernum].set_yticks([])
+          layernum+=1
+      picnum+=1
+
+  return 
+def model_eval(model, X_test , y_test, label_map,visx,visy):
+  modelaccuracy(model,X_test,y_test,label_map) 
+  show_activations(model,visx,visy)
+
 def plot_confusion_matrix(cm, class_names):
     """
     Returns a matplotlib figure containing the plotted confusion matrix.
@@ -75,7 +116,7 @@ def plot_confusion_matrix(cm, class_names):
        class_names (array, shape = [n]): String names of the integer classes
     """
     cm = np.array(cm)
-    figure = plt.figure(figsize=(8, 8))
+    figure = plt.figure(figsize=(16,9))
     plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
     plt.title("Confusion matrix")
     plt.colorbar()
@@ -96,7 +137,7 @@ def plot_confusion_matrix(cm, class_names):
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
-    return 
+    return figure
 
 def getData(filname):
     # images are 48x48
@@ -115,62 +156,35 @@ def getData(filname):
     X, Y = np.array(X) / 255.0, np.array(Y)
     return X, Y
 def my_model():
-    final_model = Sequential()
+    model = Sequential()
     input_shape = (48,48,1)
-    final_model.add(Conv2D(128, (5, 5), input_shape=input_shape,activation='relu', padding='same'))
-    final_model.add(Conv2D(128, (5, 5), input_shape=input_shape,activation='relu', padding='same'))
-    final_model.add(Conv2D(128, (5, 5), input_shape=input_shape,activation='relu', padding='same'))
+    model.add(Conv2D(64, (5, 5), input_shape=input_shape,activation='relu', padding='same'))
+    model.add(Conv2D(64, (5, 5), activation='relu', padding='same'))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    final_model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Conv2D(128, (5, 5),activation='relu',padding='same'))
+    model.add(Conv2D(128, (5, 5),activation='relu',padding='same'))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    final_model.add(Conv2D(256, (5, 5),activation='relu',padding='same'))
-    final_model.add(Conv2D(256, (3, 3),activation='relu',padding='same'))
+    model.add(Conv2D(256, (3, 3),activation='relu',padding='same'))
+    model.add(Conv2D(256, (3, 3),activation='relu',padding='same'))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    final_model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Flatten())
+    model.add(Dense(128))
+    model.add(BatchNormalization())
+    model.add(Activation('relu'))
+    model.add(Dropout(0.2))
+    model.add(Dense(7))
+    model.add(Activation('softmax'))
 
-    final_model.add(Conv2D(1024, (3, 3),activation='relu',padding='same'))
-    final_model.add(BatchNormalization())
-    final_model.add(MaxPooling2D(pool_size=(2, 2)))
-
-    final_model.add(Flatten())
-    final_model.add(BatchNormalization())
-
-
-    final_model.add(Dense(999))
-    final_model.add(Activation('relu'))
-    final_model.add(Dropout(0.3))
-    final_model.add(BatchNormalization())
-
-    final_model.add(Dense(750))
-    final_model.add(Activation('relu'))
-    final_model.add(Dropout(0.3))
-
-    final_model.add(BatchNormalization())
-
-
-    final_model.add(Dense(500))
-    final_model.add(Activation('relu'))
-    final_model.add(Dropout(0.2))
-
-    final_model.add(BatchNormalization())
-
-    final_model.add(Dense(100))
-    final_model.add(Activation('relu'))
-    final_model.add(Dropout(0.2))
-
-    final_model.add(BatchNormalization())
-
-    final_model.add(Dense(25))
-    final_model.add(Activation('relu'))
-    final_model.add(Dropout(0.1))
-
-    final_model.add(Dense(7))
-    final_model.add(Activation('softmax'))
-
-    final_model.compile(loss='categorical_crossentropy', metrics=['accuracy'],optimizer='adam')
+    model.compile(loss='categorical_crossentropy', metrics=['accuracy'],optimizer='adam')
     
     
-    return final_model
+    return model
 def emotion_analysis(emotions):
     objects = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral']
     y_pos = np.arange(len(objects))
@@ -191,8 +205,8 @@ def find_faces_in_img(frame,faceCascade):
         scaleFactor=1.1,
         minNeighbors=5,
         minSize=(48, 48),
-        maxSize = (300,300),
-        flags = cv2.CASCADE_SCALE_IMAGE
+        maxSize = (300,300)
+        #flags = cv2.CV_HAAR_SCALE_IMAGE
     )
 
 #     print("Found {0} faces!".format(len(faces)))
